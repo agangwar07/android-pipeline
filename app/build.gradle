@@ -1,0 +1,74 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        applicationId "com.example.android.architecture.blueprints.todomvp"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+
+
+    // If you need to add more flavors, consider using flavor dimensions.
+
+
+    // Remove mockRelease as it's not needed.
+      flavorDimensions "default"
+	
+
+
+    // Always show the result of every unit test, even if it passes.
+    testOptions.unitTests.all {
+        testLogging {
+            events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        }
+    }
+}
+
+/*
+ Dependency versions are defined in the top level build.gradle file. This helps keeping track of
+ all versions in a single place. This improves readability and helps managing project complexity.
+ */
+dependencies {
+    // App's dependencies, including test
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:design:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    implementation "com.android.support.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
+    implementation "com.google.guava:guava:$rootProject.guavaVersion"
+
+    // Dependencies for local unit tests
+    implementation "junit:junit:$rootProject.ext.junitVersion"
+    //implementation "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"
+    //implementation "org.hamcrest:hamcrest-all:$rootProject.ext.hamcrestVersion"
+
+    // Android Testing Support Library's runner and rules
+    implementation "com.android.support.test:runner:$rootProject.ext.runnerVersion"
+    implementation "com.android.support.test:rules:$rootProject.ext.runnerVersion"
+
+    // Dependencies for Android unit tests
+    implementation "junit:junit:$rootProject.ext.junitVersion"
+    //implementation "org.mockito:mockito-core:$rootProject.ext.mockitoVersion"
+    implementation 'com.google.dexmaker:dexmaker:1.2'
+    implementation 'com.google.dexmaker:dexmaker-mockito:1.2'
+
+    // Espresso UI Testing
+    implementation "com.android.support.test.espresso:espresso-core:$rootProject.espressoVersion"
+    implementation "com.android.support.test.espresso:espresso-contrib:$rootProject.espressoVersion"
+    implementation "com.android.support.test.espresso:espresso-intents:$rootProject.espressoVersion"
+
+    // Resolve conflicts between main and test APK:
+    implementation "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    implementation "com.android.support:design:$rootProject.supportLibraryVersion"
+}
