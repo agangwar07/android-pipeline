@@ -23,20 +23,16 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
-    tasks: 'assembleDebug test'
-  displayName: gradlew assembleDebug test
+    tasks: 'clean assembleDebug test'
+  displayName: gradlebuild
 
 - task: AndroidSigning@3
   inputs:
     apkFiles: '**/*.apk'
     apksign: true
     apksignerKeystoreFile: 'android-keystore.jks'
-    apksignerKeystorePassword: $(keystore_password)
-    apksignerKeystoreAlias: $(keystore_alias)
-    apksignerKeyPassword: $(key_password)
+    apksignerKeystorePassword: ${env:keystorepassword}
+    apksignerKeystoreAlias: ${env:keystorealias}
+    apksignerKeyPassword: ${env:keypassword}
     zipalign: true
-  env:
-    keystore_password: $(keystorepassword)
-    keystore_alias: $(keystorealias)
-    key_password: $(keypassword)
   displayName: Sign APKs
