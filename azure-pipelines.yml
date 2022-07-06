@@ -20,7 +20,14 @@ steps:
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.11'
     jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/TEST-*.xml'
-    tasks: 'assembleDebug test'
-  displayName: gradlew assembleDebug test
+
+- task: AndroidSigning@3
+  inputs:
+    apkFiles: '**/*.apk'
+    apksign: true
+    apksignerKeystoreFile: 'C:\Users\ankit.gangwar\Downloads\pipelines-android-master\android-keystore.jks'
+    apksignerKeystorePassword: 'keystore'
+    apksignerKeystoreAlias: 'key1'
+    apksignerKeyPassword: 'keystore'
+    zipalign: true
+  displayName: Sign APKs
