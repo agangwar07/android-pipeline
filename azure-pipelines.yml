@@ -47,13 +47,11 @@ steps:
     Contents: '**/*.apk'
     TargetFolder: '$(build.artifactStagingDirectory)'
 - task: PublishBuildArtifacts@1
-- task: AppCenterDistribute@3
+- task: AppCenterDistribute@2
   inputs:
     serverEndpoint: 'orgappcenter'
-    appSlug: 'https://appcenter.ms/orgs/test1171771/apps/android-release'
+    appSlug: 'https://appcenter.ms/users/agangwar/apps/android-release'
     appFile: '$(build.artifactStagingDirectory)'
-    symbolsOption: 'Android'
-    releaseNotesOption: 'input'
-    releaseNotesInput: 'testandroidjob'
-    destinationType: 'groups'
+
+  
 
