@@ -41,3 +41,9 @@ steps:
     apksignerKeyPassword: $(key_password)
     zipalign: true
   displayName: Sign APKs
+
+- task: CopyFiles@2
+  inputs:
+    Contents: '**/*.apk'
+    TargetFolder: '$(build.artifactStagingDirectory)'
+- task: PublishBuildArtifacts@1
