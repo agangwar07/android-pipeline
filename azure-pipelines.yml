@@ -28,7 +28,7 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
-    tasks: 'clean assembleDebug test'
+    tasks: 'assembleDebug'
   displayName: gradlebuild
 
 - task: AndroidSigning@3
@@ -48,7 +48,7 @@ steps:
     TargetFolder: '$(build.artifactStagingDirectory)'
 - task: PublishBuildArtifacts@1
 
-- task: AppCenterDistribute@2
+- task: AppCenterDistribute@3
   inputs:
     serverEndpoint: 'orgappcenter'
     appSlug: 'https://appcenter.ms/users/agangwar/apps/android-release'
