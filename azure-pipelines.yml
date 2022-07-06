@@ -50,7 +50,7 @@ steps:
 - task: AppCenterDistribute@3
   inputs:
     serverEndpoint: 'appcenteruploads'
-    appSlug: 'https://appcenter.ms/users/agangwar/android-pipeline'
+    appSlug: 'https://appcenter.ms/users/agangwar/apps/android-pipeline'
     appFile: '$(build.artifactStagingDirectory)'
     symbolsOption: 'Android'
     releaseNotesOption: 'input'
