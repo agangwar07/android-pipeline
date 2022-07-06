@@ -11,7 +11,13 @@ pool:
   demands:
    - agent.name -equals mywindowsagent
 
+variables:
+  keystorepassword: $(keystorepassword)
+  keystorealias: $(keystorealias)
+  keypassword: $(keypassword)
+
 steps:
+
 - task: Gradle@2
   inputs:
     workingDirectory: ''
@@ -30,8 +36,8 @@ steps:
     apkFiles: '**/*.apk'
     apksign: true
     apksignerKeystoreFile: 'android-keystore.jks'
-    apksignerKeystorePassword: 'keystore'
-    apksignerKeystoreAlias: 'key1'
-    apksignerKeyPassword: 'keystore'
+    apksignerKeystorePassword: $(keystorepassword)
+    apksignerKeystoreAlias: $(keystorealias)
+    apksignerKeyPassword: $(keypassword)
     zipalign: true
   displayName: Sign APKs
