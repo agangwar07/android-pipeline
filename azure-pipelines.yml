@@ -49,7 +49,7 @@ steps:
 - task: PublishBuildArtifacts@1
 - task: AppCenterDistribute@3
   inputs:
-    serverEndpoint: 'appcenteruploads'
+    serverEndpoint: 'orgappcenter'
     appSlug: 'https://appcenter.ms/orgs/test1171771/apps/android-release'
     appFile: '$(build.artifactStagingDirectory)'
     symbolsOption: 'Android'
