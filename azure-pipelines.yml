@@ -25,7 +25,7 @@ steps:
   inputs:
     apkFiles: '**/*.apk'
     apksign: true
-    apksignerKeystoreFile: 'C:\Users\ankit.gangwar\Downloads\pipelines-android-master\android-keystore.jks'
+    apksignerKeystoreFile: 'android-keystore.jks'
     apksignerKeystorePassword: 'keystore'
     apksignerKeystoreAlias: 'key1'
     apksignerKeyPassword: 'keystore'
