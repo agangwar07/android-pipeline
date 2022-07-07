@@ -52,9 +52,9 @@ steps:
   inputs:
     serverEndpoint: 'orgappcenter'
     appSlug: 'agangwar/android-release'
-    appFile: '$(build.artifactStagingDirectory)'
+    appFile: 'app/build/outputs/apk/debug/*.apk'
     releaseNotesOption: 'input'
-    releaseNotesInput: 'androidtestapp'
+    releaseNotesInput: 'CHANGELOG'
 
   
 
