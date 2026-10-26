@@ -1,31 +1,72 @@
-
-# Contributing
-
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.microsoft.com.
-
-When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., label, comment, documentation). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
-
-# Legal Notices
-
-Microsoft and any contributors grant you a license to the Microsoft documentation and other content
-in this repository under the [Creative Commons Attribution 4.0 International Public License](https://creativecommons.org/licenses/by/4.0/legalcode),
-see the [LICENSE](LICENSE) file, and grant you a license to any code in the repository under the [MIT License](https://opensource.org/licenses/MIT), see the
-[LICENSE-CODE](LICENSE-CODE) file.
-
-Microsoft, Windows, Microsoft Azure and/or other Microsoft products and services referenced in the documentation
-may be either trademarks or registered trademarks of Microsoft in the United States and/or other countries.
-The licenses for this project do not grant you rights to use any Microsoft names, logos, or trademarks.
-Microsoft's general trademark guidelines can be found at http://go.microsoft.com/fwlink/?LinkID=254653.
-
-Privacy information can be found at https://privacy.microsoft.com/en-us/
-
-Microsoft and any contributors reserve all others rights, whether under their respective copyrights, patents,
-or trademarks, whether by implication, estoppel or otherwise.
+# android-pipeline
+ 
+An Android sample app wired to an Azure Pipelines CI/CD definition. On every push to `main` the pipeline builds a debug APK with Gradle, signs it, publishes it as a build artifact and sends it to a distribution group.
+ 
+The app itself is the MVP to-do sample from the Android Architecture Blueprints (`com.example.android.architecture.blueprints.todomvp`). The point of the repo is the pipeline, not the app.
+ 
+## Repository layout
+ 
+| Path | Purpose |
+|------|---------|
+| `azure-pipelines.yml` | Azure Pipelines definition |
+| `app/` | Android application module |
+| `build.gradle`, `settings.gradle`, `gradle.properties` | Root Gradle configuration |
+| `gradlew`, `gradlew.bat`, `gradle/wrapper` | Gradle wrapper |
+| `.vscode/` | Editor settings |
+| `LICENSE`, `LICENSE-CODE` | Documentation licence (CC BY 4.0) and code licence (MIT) |
+ 
+## Pipeline
+ 
+Defined in `azure-pipelines.yml`, triggered by commits to `main`.
+ 
+| Step | Task | What it does |
+|------|------|--------------|
+| 1. Build | `Gradle@2` | Runs `clean assembleDebug` with the wrapper on JDK 11, heap set to 3 GB, and publishes JUnit results from `**/TEST-*.xml` |
+| 2. Sign | `AndroidSigning@3` | Signs every APK with `android-keystore.jks` and zipaligns it |
+| 3. Stage | `CopyFiles@2` | Copies APKs to the artifact staging directory |
+| 4. Publish | `PublishBuildArtifacts@1` | Publishes the staged files as a build artifact |
+| 5. Distribute | `AppCenterDistribute@3` | Uploads `app/build/outputs/apk/debug/*.apk` to the `agangwar/android-release` app using the `orgappcenter` service connection, with `CHANGELOG` as release notes |
+ 
+The job runs on a self-hosted agent: pool `test`, agent name `mywindowsagent`.
+ 
+### Required pipeline setup
+ 
+Signing credentials are not stored in the repo. Create these as secret pipeline variables:
+ 
+| Variable | Used as |
+|----------|---------|
+| `keystorepassword` | Keystore password |
+| `keystorealias` | Key alias |
+| `keypassword` | Key password |
+ 
+The keystore file `android-keystore.jks` is not committed either. Provide it to the agent, for example as an Azure DevOps secure file, and make sure the signing step can find it.
+ 
+You also need:
+ 
+- A self-hosted agent named `mywindowsagent` in the `test` pool, with JDK 11 and the Android SDK
+- A service connection named `orgappcenter`
+## Build locally
+ 
+```bash
+./gradlew clean assembleDebug
+```
+ 
+The APK is written to `app/build/outputs/apk/debug/`.
+ 
+## Important: App Center has been retired
+ 
+The distribution step relies on Visual Studio App Center, which Microsoft retired on March 31, 2025 (only the Analytics and Diagnostics features were kept for a while longer). Step 5 will fail. Microsoft's migration guidance points to Azure Pipelines for builds and other tools for distribution, for example Firebase App Distribution or Google Play internal testing. Replace the `AppCenterDistribute@3` task with one of those.
+ 
+## Other notes
+ 
+- The Gradle setup uses the old Android Support Library (`com.android.support:*`) and `AndroidJUnitRunner` from `android.support.test`. Building with a current Android Gradle Plugin means migrating to AndroidX.
+- The pipeline builds and distributes a debug build. A release build needs `assembleRelease` and a matching change to the APK path in the distribute step.
+## Contributing
+ 
+This project welcomes contributions and suggestions. Most contributions require agreeing to a Contributor License Agreement (CLA). When you open a pull request, a bot will tell you whether one is needed. The project follows the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
+ 
+## Legal notices
+ 
+Microsoft and any contributors grant a licence to the documentation and other content in this repository under the [Creative Commons Attribution 4.0 International Public License](https://creativecommons.org/licenses/by/4.0/legalcode) (see `LICENSE`), and a licence to any code in the repository under the [MIT License](https://opensource.org/licenses/MIT) (see `LICENSE-CODE`).
+ 
+Microsoft, Windows, Microsoft Azure and other Microsoft products and services referenced here may be trademarks of Microsoft. The licences do not grant any right to use Microsoft names, logos or trademarks. See Microsoft's [trademark guidelines](http://go.microsoft.com/fwlink/?LinkID=254653) and [privacy statement](https://privacy.microsoft.com/en-us/).
